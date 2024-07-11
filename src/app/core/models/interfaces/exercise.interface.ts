@@ -8,10 +8,8 @@ export interface Exercise {
   name: string;
   description: string;
   image: string;
-  duration: number;
   Category: exerciseCategory;
   valueCounter: valueCounter;
-  weight: number;
   equipment: Equipment;
   targetedMuscles: TargetedMuscle[];
   createdAt: Date;

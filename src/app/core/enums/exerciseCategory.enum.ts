@@ -1,5 +1,5 @@
 export enum exerciseCategory{
-    Cardio = "CARDIO",
-    Strength = "STRENGTH",
-    Flexibility = "FLEXIBILITY",
+    Cardio = "Cardio",
+    Strength = "Strength",
+    Flexibility = "Flexibility",
 }

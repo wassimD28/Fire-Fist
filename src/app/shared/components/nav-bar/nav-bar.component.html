@@ -1,27 +1,47 @@
-<div class=" w-full fixed px-4 pt-2">
-    <nav class="text-custom-text bg-custom-semiBg2 flex flex-row items-center justify-between w-full py-2 px-4 rounded-md">
-      <!-- logo -->
-      <div class="flex items-center">
-        <!-- logo image -->
-        <img class="w-10 h-10" src="../../../../assets/icons/FireFist--logo.png" alt="logo" />
-        <!-- logo text -->
-        <h1 class="text-2xl uppercase font-semibold text-custom-primary">FireFist</h1>
-      </div>
-      <!-- navigation -->
-      <ul class="flex flex-row items-center sm:gap-6 md:gap-12">
-        @for (link of links; track $index) {
-          <li>
-            <a class=" cursor-pointer">{{ link.name }}</a>
-          </li>
-        }
-      </ul>
-      <!-- if the user logged in successfully -->
-      @if (loggedIn) {
-        <button>Logout</button>
-        <!-- if the user not logged in -->
-      } @else {
-        <!-- login button -->
-        <button class="py-2 px-3 border border-custom-accent rounded-md text-custom-accent bg-transparent">Login</button>
+<div class="fixed w-full px-4 pt-2">
+  <nav
+    class="flex w-full flex-row items-center justify-between rounded-md bg-custom-semiBg1 px-4 py-2 text-custom-text"
+  >
+    <!-- logo -->
+    <div class="flex items-center">
+      <!-- logo image -->
+      <img
+        class="h-10 w-10"
+        src="../../../../assets/icons/logo firefist.svg"
+        alt="logo"
+      />
+      <!-- logo text -->
+      <h1 class="text-2xl font-semibold uppercase text-custom-primary">
+        FireFist
+      </h1>
+    </div>
+    <!-- navigation -->
+    <ul class="flex flex-row items-center sm:gap-6 md:gap-8">
+      @for (link of links; track $index) {
+        <li>
+          <a
+            [routerLink]="link.url"
+            routerLinkActive="active"
+            class="cursor-pointer px-3 py-2 rounded-md duration-300 ease-in-out"
+            [class.bg-custom-semiBg3]="link.isCurrent"
+            [class.bg-transparent]="!link.isCurrent"
+            (click)="onLinkClick(link)"
+            >{{ link.name }}</a
+          >
+        </li>
       }
-    </nav>
+    </ul>
+    <!-- if the user logged in successfully -->
+    @if (loggedIn) {
+      <button>Logout</button>
+      <!-- if the user not logged in -->
+    } @else {
+      <!-- login button -->
+      <button
+        class="rounded-md border border-custom-accent bg-transparent px-3 py-2 text-custom-accent"
+      >
+        Login
+      </button>
+    }
+  </nav>
 </div>

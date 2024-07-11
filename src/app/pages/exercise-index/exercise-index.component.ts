@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
+import { SideFilterComponent } from '../../shared/components/side-filter/side-filter.component';
 
 @Component({
   selector: 'app-exercise-index',
   standalone: true,
-  imports: [],
+  imports: [SideFilterComponent],
   templateUrl: './exercise-index.component.html',
-  styleUrl: './exercise-index.component.css'
 })
 export class ExerciseIndexComponent {
 

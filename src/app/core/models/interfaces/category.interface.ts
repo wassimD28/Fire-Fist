@@ -1,5 +1,7 @@
+import { exerciseCategory } from "../../enums/exerciseCategory.enum";
+
 export interface Category {
-  name: string;
+  name: exerciseCategory;
   description: string;
   image: string;
 }
