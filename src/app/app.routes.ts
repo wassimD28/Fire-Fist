@@ -2,6 +2,8 @@ import { ExerciseIndexComponent } from './pages/exercise-index/exercise-index.co
 import { Routes } from '@angular/router';
 import { ExerciseShowComponent } from './pages/exercise-show/exercise-show.component';
 import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
+
 
 export const routes: Routes = [
   {
@@ -13,7 +15,12 @@ export const routes: Routes = [
     component: ExerciseShowComponent
   },
   {
-    path: '',
+    path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
   }
 ];
+
