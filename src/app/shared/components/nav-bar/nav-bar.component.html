@@ -22,7 +22,7 @@
           <a
             [routerLink]="link.url"
             routerLinkActive="active"
-            class="cursor-pointer px-3 py-2 rounded-md duration-300 ease-in-out"
+            class="cursor-pointer rounded-md px-3 py-2 duration-300 ease-in-out"
             [class.bg-custom-semiBg3]="link.isCurrent"
             [class.bg-transparent]="!link.isCurrent"
             (click)="onLinkClick(link)"
@@ -33,15 +33,20 @@
     </ul>
     <!-- if the user logged in successfully -->
     @if (loggedIn) {
-      <button>Logout</button>
+      <a
+        routerLink="logout"
+        class="rounded-md border border-custom-accent bg-transparent px-3 py-2 text-custom-accent"
+        >Logout
+      </a>
       <!-- if the user not logged in -->
     } @else {
       <!-- login button -->
-      <button
+      <a
+        routerLink="login"
         class="rounded-md border border-custom-accent bg-transparent px-3 py-2 text-custom-accent"
       >
         Login
-      </button>
+      </a>
     }
   </nav>
 </div>

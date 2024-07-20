@@ -2,11 +2,12 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
-import { RegisterService } from '../../core/services/register/register.service';
 import { CommonModule } from '@angular/common';
 import { PasswordValidation } from '../../shared/validations/password.validation';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { AuthService } from '../../core/services/auth/auth.service';
+import { User } from '../../core/models/interfaces/common.interface';
 
 @Component({
   selector: 'app-register',
@@ -14,7 +15,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   imports: [ReactiveFormsModule, HttpClientModule, CommonModule, FontAwesomeModule, RouterLink, RouterLinkActive],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
-  providers: [RegisterService]
+  providers: [AuthService]
 })
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
@@ -22,7 +23,7 @@ export class RegisterComponent implements OnInit {
   faCheck = faCheck;
 
 
-  constructor(private registerService: RegisterService,  private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
@@ -46,7 +47,7 @@ export class RegisterComponent implements OnInit {
         Validators.required,
         Validators.minLength(8),
       ]),
-    },{ validators: PasswordValidation.passwordsMatch });
+    }, { validators: PasswordValidation.passwordsMatch });
   }
 
 
@@ -56,13 +57,13 @@ export class RegisterComponent implements OnInit {
     }
 
     const formData = this.registerForm.value;
-    const user = {
-      "username": formData.username,
-      "email": formData.email,
-      "password": formData.password
+    const user: User = {
+      username: formData.username,
+      email: formData.email,
+      password: formData.password
     }
     console.log(user);
-    this.registerService.register(user).subscribe(
+    this.authService.register(user).subscribe(
       (response) => {
         console.log(response);
         this.router.navigate(['/login']);
