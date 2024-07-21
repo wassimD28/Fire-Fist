@@ -33,11 +33,11 @@
     </ul>
     <!-- if the user logged in successfully -->
     @if (loggedIn) {
-      <a
-        routerLink="logout"
+      <button
+        (click)="logout()"
         class="rounded-md border border-custom-accent bg-transparent px-3 py-2 text-custom-accent"
         >Logout
-      </a>
+      </button>
       <!-- if the user not logged in -->
     } @else {
       <!-- login button -->

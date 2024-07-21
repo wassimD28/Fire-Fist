@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { AuthService } from './../../../core/services/auth/auth.service';
+import { Component, OnInit, inject } from '@angular/core';
 import { Link } from '../../../core/models/interfaces/link.interface';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-nav-bar',
@@ -8,17 +9,31 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule],
   templateUrl: './nav-bar.component.html',
 })
-export class NavBarComponent {
+export class NavBarComponent implements OnInit{
   loggedIn: boolean = false;
+
+  authService = inject(AuthService)
+  router = inject(Router);
+
   links : Link[] = [
-    {name: 'Home', url: '/Home', isCurrent: false},
-    {name: 'Exercises', url: '/exercises', isCurrent: true},
-    {name: 'show', url: '/show', isCurrent: false},
-    {name: 'Contact', url: '/Contact', isCurrent: false},
+    {name: 'Exercises', url: '/secure/exercises', isCurrent: true},
+    {name: 'show', url: '/secure/show-exer', isCurrent: false},
   ]
+  ngOnInit(): void {
+    this.loggedIn = this.authService.isLoggedIn()
+  }
   onLinkClick(clickedLink :Link){
     this.links.forEach(link => link.isCurrent = false);
     clickedLink.isCurrent = true;
+  }
+
+  logout(){
+    this.authService.logout().subscribe(()=>{
+      this.loggedIn = false;
+      this.router.navigate(['/login']);
+    },(error)=>{
+      console.error('Error logging out', error);
+    });
   }
 
 }

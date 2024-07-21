@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 import { LoginResponse, User } from '../../models/interfaces/common.interface';
@@ -11,6 +11,7 @@ export class AuthService {
   private apiUrlLogin = 'http://localhost:3000/api/auth/login';
   private apiUrlRefreshToken = 'http://localhost:3000/api/auth/token';
   private apiUrlValidateToken = 'http://localhost:3000/api/auth/validate-token';
+  private apiUrlLogout = 'http://localhost:3000/api/auth/logout';
 
   private ACCESS_TOKEN_KEY = 'access_token';
   private REFRESH_TOKEN_KEY = 'refresh_token';
@@ -31,6 +32,11 @@ export class AuthService {
         }
       })
     );
+  }
+
+  isLoggedIn(): boolean {
+    const token = this.getAccessToken();
+    return token !== null && !this.isTokenExpired(token);
   }
 
   validateToken(token: string): Observable<boolean> {
@@ -54,18 +60,68 @@ export class AuthService {
   }
 
   getRefreshToken(): string | null {
-    const token = localStorage.getItem(this.REFRESH_TOKEN_KEY);
-    console.log('Retrieved Access Token:', token);
-    return token
+    return localStorage.getItem(this.REFRESH_TOKEN_KEY);
   }
 
   getUsername(): string | null {
     return localStorage.getItem(this.USERNAME_KEY);
   }
 
-  logout(): void {
-    localStorage.removeItem(this.ACCESS_TOKEN_KEY);
-    localStorage.removeItem(this.REFRESH_TOKEN_KEY);
-    localStorage.removeItem(this.USERNAME_KEY);
+  logout(): Observable<void> {
+    const token = this.getAccessToken();
+    const refreshToken = this.getRefreshToken();
+
+    if (!refreshToken) {
+      return of(undefined);
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.delete<void>(this.apiUrlLogout, {
+      headers: headers,
+      body: { token: refreshToken }
+    }).pipe(
+      tap(() => {
+        localStorage.removeItem(this.ACCESS_TOKEN_KEY);
+        localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+        localStorage.removeItem(this.USERNAME_KEY);
+      }),
+      catchError((error) => {
+        console.error('Logout failed', error);
+        return of(undefined);
+      })
+    );
   }
+
+
+  refreshAccessToken(): Observable<string | null> {
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) {
+      return of(null);
+    }
+
+    return this.http.post<LoginResponse>(this.apiUrlRefreshToken, { refreshToken }).pipe(
+      map((response: LoginResponse) => {
+        if (response.accessToken && response.refreshToken) {
+          this.saveToken(response.accessToken, response.refreshToken);
+          return response.accessToken;
+        } else {
+          return null;
+        }
+      }), catchError(() => {
+        return of(null);
+      })
+    )
+  }
+
+  isTokenExpired(token: string): boolean {
+    if (!token) {
+      return true;
+    }
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const expiry = payload.exp;
+    return (Math.floor((new Date).getTime() / 1000)) >= expiry;
+  }
+
 }
