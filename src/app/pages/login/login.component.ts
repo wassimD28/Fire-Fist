@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(user).subscribe(
       (response: LoginResponse) => {
         console.log(response);
-        this.router.navigate(['/secure']);
+        this.router.navigate(['/secure/exercises']);
       },
       (error: HttpErrorResponse) => {
         console.error('Error logging in', error);

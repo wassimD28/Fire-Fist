@@ -1,0 +1,46 @@
+<div class="h-full w-full overflow-hidden bg-custom-semiBg1 text-custom-text">
+  <app-stepper [steps]="steps"></app-stepper>
+  <!-- steps container -->
+  <div
+    class="mt-[70px] flex w-[calc(600px*4)] flex-row flex-wrap duration-300 ease-in-out"
+    [ngClass]="{
+      'translate-x-[0px]': steps[0].isCurrent,
+      'translate-x-[-600px]': steps[1].isCurrent,
+      'translate-x-[calc(-600px*2)]': steps[2].isCurrent,
+      'translate-x-[calc(-600px*3)]': steps[3].isCurrent,
+    }"
+  >
+    <!-- 1st step -->
+    <app-step1 [exercise]="exercise"></app-step1>
+    <!-- 2nd step -->
+    <app-step2 [exercise]="exercise" [categories]="categories"></app-step2>
+    <!-- 3rd step -->
+    <app-step3 [exercise]="exercise" [valueCounters]="valueCounters"></app-step3>
+    <!-- 4th step -->
+    <app-targeted-muscle-step [exercise]="exercise" [muscles]="muscles"></app-targeted-muscle-step>
+  </div>
+
+  <!-- next button -->
+  <button
+    mat-button
+    class="absolute bottom-4 right-6 rounded bg-custom-primary px-4 py-2 font-medium text-white hover:bg-custom-accent"
+    (click)="nextStep()"
+  >
+    Next
+  </button>
+  <!-- previous button -->
+  <button
+    mat-button
+    class="absolute bottom-4 right-24 rounded bg-custom-primary px-4 py-2 font-medium text-white hover:bg-custom-accent"
+    (click)="previousStep()"
+  >
+    Previous
+  </button>
+  <!-- cancel button -->
+  <button
+    class="absolute bottom-4 left-6 rounded border border-custom-text bg-transparent px-4 py-2 text-sm font-medium tracking-wider text-custom-text duration-200 ease-in-out hover:bg-custom-text hover:text-custom-semiBg1"
+    (click)="close()"
+  >
+    Cancel
+  </button>
+</div>

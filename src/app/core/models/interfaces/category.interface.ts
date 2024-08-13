@@ -1,9 +1,9 @@
-import { exerciseCategory } from "../../enums/exerciseCategory.enum";
+import { ExerciseCategory } from "../../enums/exerciseCategory.enum";
 
 export interface Category {
   id?: number;
-  name: exerciseCategory;
-  description: string;
+  name: ExerciseCategory;
+  description?: string;
   image: string;
   createdAt?: Date;
   updatedAt?: Date;

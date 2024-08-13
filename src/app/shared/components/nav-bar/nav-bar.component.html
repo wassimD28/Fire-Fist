@@ -1,6 +1,6 @@
-<div class="fixed w-full px-4 pt-2">
+<div class="fixed z-50 w-full px-4 pt-2">
   <nav
-    class="flex w-full flex-row items-center justify-between rounded-md bg-custom-semiBg1 px-4 py-2 text-custom-text"
+    class="z-20 flex w-full flex-row items-center justify-between rounded-md bg-custom-semiBg1 px-4 py-2 text-custom-text relative"
   >
     <!-- logo -->
     <div class="flex items-center">
@@ -36,7 +36,8 @@
       <button
         (click)="logout()"
         class="rounded-md border border-custom-accent bg-transparent px-3 py-2 text-custom-accent"
-        >Logout
+      >
+        Logout
       </button>
       <!-- if the user not logged in -->
     } @else {

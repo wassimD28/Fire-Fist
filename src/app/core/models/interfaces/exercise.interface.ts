@@ -1,5 +1,8 @@
-import { exerciseCategory } from "../../enums/exerciseCategory.enum";
-import { valueCounter } from "../../enums/valueCounter.enum";
+import { ExerciseCategory } from "../../enums/exerciseCategory.enum";
+import { ExerciseDifficulty } from "../../enums/exerciseDifficulty.enum";
+import { ExerciseValueCounter } from "../../enums/valueCounter.enum";
+import { Category } from "./category.interface";
+import { Difficulty } from "./difficulty.interface";
 import { Equipment } from "./equipment.interface";
 import { TargetedMuscle } from "./targetedMuscle.interface";
 
@@ -8,10 +11,11 @@ export interface Exercise {
   name: string;
   description: string;
   image: string;
-  Category: exerciseCategory;
-  valueCounter: valueCounter;
-  equipment: Equipment;
+  category: ExerciseCategory;
+  //valueCounter: valueCounter;
+  //equipment: Equipment;
+  difficulty : ExerciseDifficulty;
   targetedMuscles: TargetedMuscle[];
-  createdAt: Date;
-  updatedAt: Date;
+  //createdAt: Date;
+  //updatedAt: Date;
 }

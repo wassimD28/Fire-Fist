@@ -22,8 +22,16 @@ export const routes: Routes = [
       }
     ]
   },
-  { path: 'login', component: LoginComponent, canMatch: [alreadyLoggedGuard] },
-  { path: 'register', component: RegisterComponent, canMatch: [alreadyLoggedGuard] },
+  {
+    path: 'login',
+    loadComponent: ()=> import('./pages/login/login.component').then((c) => c.LoginComponent),
+    canMatch: [alreadyLoggedGuard]
+  },
+  {
+    path: 'register',
+    loadComponent: ()=> import('./pages/register/register.component').then((c) => c.RegisterComponent),
+    canMatch: [alreadyLoggedGuard]
+  },
   { path: '**', redirectTo: 'login' }
 ];
 

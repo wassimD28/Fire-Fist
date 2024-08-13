@@ -11,3 +11,15 @@ export interface LoginResponse{
   refreshToken?: string;
 }
 
+export interface MusclePath{
+  name: string;
+  d: string;
+  partOf?: string;
+  side?: "left"|"right";
+}
+
+export interface MusclePathGroup{
+  groupName: string;
+  groupSide?: string;
+  musclePaths: MusclePath[];
+}
