@@ -1,8 +1,9 @@
 export interface Equipment {
-  id: number;
+  id?: number;
   name: string;
-  description: string;
-  image: string;
-  createdAt: Date;
-  updatedAt: Date;
+  description?: string;
+  image?: string;
+  selected?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

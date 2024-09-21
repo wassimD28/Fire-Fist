@@ -1,4 +1,13 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -18,7 +27,13 @@ import { ValueCounter } from '../../../core/models/interfaces/valueCounter.inter
 import { Step3Component } from '../step3/step3.component';
 import { TargetedMuscleStepComponent } from '../targeted-muscle-step/targeted-muscle-step.component';
 import { Muscle } from '../../../core/models/interfaces/muscle.interface';
-
+import { muscleService } from '../../../core/services/muscle/muscle.service';
+import { BodyDiagram } from '../../../core/models/interfaces/bodyDiagram.interface';
+import { BodyDiagramService } from '../../../core/services/bodyDiagram/body-diagram.service';
+import { AlertBoxComponent } from '../alert-box/alert-box.component';
+import { Alert } from '../../../core/models/interfaces/common.interface';
+import { AlertStatus } from '../../../core/enums/common.enum';
+import { EquipmentStepComponent } from '../equipment-step/equipment-step.component';
 
 @Component({
   selector: 'app-create-exercise-dialog',
@@ -33,59 +48,104 @@ import { Muscle } from '../../../core/models/interfaces/muscle.interface';
     Step1Component,
     Step2Component,
     Step3Component,
-    TargetedMuscleStepComponent
+    TargetedMuscleStepComponent,
+    AlertBoxComponent,
+    EquipmentStepComponent,
   ],
   templateUrl: './create-exercise-dialog.component.html',
 })
-export class CreateExerciseDialogComponent implements OnInit{
+export class CreateExerciseDialogComponent implements OnInit {
+  // display alert
+  alert: Alert = { show: false };
+  setAlert(value: Alert) {
+    this.alert = value;
+  }
 
   constructor(
     private dialogRef: MatDialogRef<CreateExerciseDialogComponent>,
-    private categoryService : CategoryService,
-    private valueCounterService : ValueCounterService,
-    @Inject(MAT_DIALOG_DATA) private data : any
-  ) { }
+    private categoryService: CategoryService,
+    private valueCounterService: ValueCounterService,
+    private muscleService: muscleService,
+    private bodyDiagramService: BodyDiagramService,
+    @Inject(MAT_DIALOG_DATA) private data: any,
+  ) {}
 
   // data
-  categories : Category[] = [];
-  valueCounters : ValueCounter[] = [];
-  muscles : Muscle[] = [];
+  categories: Category[] = [];
+  valueCounters: ValueCounter[] = [];
+  muscles: Muscle[] = [];
+  bodyDiagrams: BodyDiagram[] = [];
+
   ngOnInit(): void {
     const token = this.data.accessToken;
     this.fetchCategories(token);
     this.fetchValueCounters(token);
+    this.fetchBodyDiagrams(token);
   }
 
-  fetchCategories(token : string): any {
+  fetchBodyDiagrams(token: string): any {
+    this.bodyDiagramService.getAllBodyDiagrams(token).subscribe({
+      next: (Response) => {
+        this.bodyDiagrams = Response;
+        console.log('the response of body diagram is : ');
+      },
+      error: (error) => {
+        console.error('Error fetching bodyDiagrams', error);
+      },
+    });
+  }
+  fetchCategories(token: string): any {
     this.categoryService.getAllCategories(token).subscribe({
-      next:(Response)=>{
+      next: (Response) => {
         this.categories = Response;
       },
-      error:(error)=>{
+      error: (error) => {
         console.error('Error fetching categories', error);
-      }}
-    )
+      },
+    });
   }
 
-  fetchValueCounters(token:string): any{
+  fetchValueCounters(token: string): any {
     this.valueCounterService.getAllValueCounters(token).subscribe({
-      next:(Response)=>{
+      next: (Response) => {
         this.valueCounters = Response;
       },
-      error:(error)=>{
+      error: (error) => {
         console.error('Error fetching value counters', error);
-      }}
-    )
+      },
+    });
+  }
+
+  fetchMuscles(token: string): any {
+    this.muscleService.getAllMuscles(token).subscribe({
+      next: (Response) => {
+        this.muscles = Response;
+      },
+      error: (error) => {
+        console.error('Error fetching muscles', error);
+      },
+    });
   }
 
   // stepper data
   steps = [
-    { id: 1, title: 'name & description', completed: false, isCurrent: true },
-    { id: 2, title: 'category & difficulty', completed: false, isCurrent: false },
-    { id: 3, title: 'targeted muscles & equipment', completed: false, isCurrent: false },
-    { id: 4, title: 'preview & save', completed: false, isCurrent: false },
-  ]
-  currentStep = this.steps.find(step => step.isCurrent == true);
+    { id: 1, title: 'name & description & image', completed: false, isCurrent: true },
+    {
+      id: 2,
+      title: 'category',
+      completed: false,
+      isCurrent: false,
+    },
+    {
+      id: 3,
+      title: 'value counter',
+      completed: false,
+      isCurrent: false,
+    },
+    { id: 4, title: 'targeted muscles', completed: false, isCurrent: false },
+    { id: 5, title: 'equipment', completed: false, isCurrent: false },
+  ];
+  currentStep = this.steps.find((step) => step.isCurrent == true);
 
   // new exercise
   exercise: Exercise = {
@@ -95,8 +155,8 @@ export class CreateExerciseDialogComponent implements OnInit{
     image: '',
     category: ExerciseCategory.Strength,
     difficulty: ExerciseDifficulty.Beginner,
-    targetedMuscles: []
-  }
+    targetedMuscles: [],
+  };
 
   close() {
     this.dialogRef.close();
@@ -104,7 +164,9 @@ export class CreateExerciseDialogComponent implements OnInit{
 
   // move to next step
   nextStep() {
-    const currentIndex = this.steps.findIndex(step => step.isCurrent === true);
+    const currentIndex = this.steps.findIndex(
+      (step) => step.isCurrent === true,
+    );
     if (currentIndex !== -1 && currentIndex < this.steps.length - 1) {
       this.steps[currentIndex].isCurrent = false;
       this.steps[currentIndex + 1].isCurrent = true;
@@ -113,7 +175,9 @@ export class CreateExerciseDialogComponent implements OnInit{
   }
   // move to previous step
   previousStep() {
-    const currentIndex = this.steps.findIndex(step => step.isCurrent === true);
+    const currentIndex = this.steps.findIndex(
+      (step) => step.isCurrent === true,
+    );
     if (currentIndex !== 0 && currentIndex <= this.steps.length - 1) {
       this.steps[currentIndex].isCurrent = false;
       this.steps[currentIndex - 1].isCurrent = true;

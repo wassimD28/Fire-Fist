@@ -18,17 +18,11 @@ import { Category } from '../../core/models/interfaces/category.interface';
   templateUrl: './exercise-index.component.html',
 })
 export class ExerciseIndexComponent implements OnInit {
-  categories: Category[] = [];
   ngOnInit(): void {
-    this.categoryService.getAllCategories().subscribe({
-      next: (Response) => {
-        this.categories = Response;
-      },
-      error: (error) => {
-        console.error('Error fetching categories', error);
-      }
-    })
+
   }
+
+
   // Injections
   constructor(
     private dialog: MatDialog,
@@ -56,9 +50,7 @@ export class ExerciseIndexComponent implements OnInit {
       image: 'the-way-of-samurai-k5.jpg',
       difficulty: ExerciseDifficulty.Beginner,
       targetedMuscles: [
-        { id: 0, name: 'Chest', image: 'chest.svg', pressurePercentage: 10 },
-        { id: 1, name: 'Back', image: 'lower back.svg', pressurePercentage: 40 },
-        { id: 2, name: 'Legs', image: 'upper leg.svg', pressurePercentage: 50 }
+
       ]
     },
   ];

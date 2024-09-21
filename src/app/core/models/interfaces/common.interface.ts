@@ -1,3 +1,5 @@
+import { AlertStatus } from "../../enums/common.enum";
+
 export interface User{
   id?: number;
   username: string;
@@ -9,17 +11,27 @@ export interface User{
 export interface LoginResponse{
   accessToken?: string;
   refreshToken?: string;
+  user_id?: string;
 }
 
 export interface MusclePath{
   name: string;
   d: string;
+  selected: boolean;
   partOf?: string;
   side?: "left"|"right";
 }
 
 export interface MusclePathGroup{
   groupName: string;
+  selected: boolean;
   groupSide?: string;
-  musclePaths: MusclePath[];
+  muscles: MusclePath[];
+}
+
+export interface Alert {
+  title ?: string;
+  description?: string;
+  alertStatus?: AlertStatus,
+  show: boolean;
 }

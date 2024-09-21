@@ -5,6 +5,7 @@ import { Category } from "./category.interface";
 import { Difficulty } from "./difficulty.interface";
 import { Equipment } from "./equipment.interface";
 import { TargetedMuscle } from "./targetedMuscle.interface";
+import { ValueCounter } from "./valueCounter.interface";
 
 export interface Exercise {
   id: number;
@@ -12,10 +13,10 @@ export interface Exercise {
   description: string;
   image: string;
   category: ExerciseCategory;
-  //valueCounter: valueCounter;
-  //equipment: Equipment;
+  valueCounter?: ValueCounter;
+  equipment?: Equipment;
   difficulty : ExerciseDifficulty;
   targetedMuscles: TargetedMuscle[];
-  //createdAt: Date;
-  //updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

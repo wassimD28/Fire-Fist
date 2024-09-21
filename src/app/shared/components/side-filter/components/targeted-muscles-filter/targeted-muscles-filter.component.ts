@@ -14,6 +14,6 @@ export class TargetedMusclesFilterComponent {
 
     searchBarFocused = false;
     targetedMuscles: Muscle[] = [
-        { id: 0, name: '', image: '', description: '' }
+        
     ];
 }

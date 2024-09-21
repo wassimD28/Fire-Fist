@@ -16,6 +16,7 @@ export class AuthService {
   private ACCESS_TOKEN_KEY = 'access_token';
   private REFRESH_TOKEN_KEY = 'refresh_token';
   private USERNAME_KEY = 'username';
+  private USER_ID_KEY = 'user_id';
 
   constructor(private http: HttpClient) { }
 
@@ -26,9 +27,10 @@ export class AuthService {
   login(user: User): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(this.apiUrlLogin, user).pipe(
       tap((response: LoginResponse) => {
-        if (response.accessToken && response.refreshToken) {
+        if (response.accessToken && response.refreshToken && response.user_id) {
           this.saveToken(response.accessToken, response.refreshToken);
           this.saveUsername(user.username);
+          this.saveUserId(response.user_id);
         }
       })
     );
@@ -54,6 +56,9 @@ export class AuthService {
   private saveUsername(username: string): void {
     localStorage.setItem(this.USERNAME_KEY, username);
   }
+  private saveUserId(userId: string): void {
+    localStorage.setItem(this.USER_ID_KEY, userId);
+  }
 
   getAccessToken(): string | null {
     return localStorage.getItem(this.ACCESS_TOKEN_KEY);
@@ -65,6 +70,10 @@ export class AuthService {
 
   getUsername(): string | null {
     return localStorage.getItem(this.USERNAME_KEY);
+  }
+
+  getUserId(): string | null {
+    return localStorage.getItem(this.USER_ID_KEY);
   }
 
   logout(): Observable<void> {
